@@ -6,7 +6,7 @@ import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 // import asyncFunctionMiddleware from './middlewares/asyncFunctionMiddleware';
 
-const composeEnhancers = window.__REDUXDEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const sagaMiddleware = createSagaMiddleware();
 
