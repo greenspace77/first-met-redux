@@ -1,5 +1,6 @@
-import { put, delay, takeEvery } from 'redux-saga/effects';
-import { fetchTodosRequested,
+import { put, delay, takeEvery, takeLatest, takeLeading } from 'redux-saga/effects';
+import { 
+    fetchTodosRequested,
     fetchTodosSucceeded,
     fetchTodosFailed,
  } from '../actions/fetchTodosAction';
@@ -8,11 +9,7 @@ import { fetchTodosRequested,
     try {
         const data = yield delay(
             3000,
-            [
-                '서버로부터 받아온 할 일 1',
-                '서버로부터 받아온 할 일 2',
-                '서버로부터 받아온 할 일 3',
-            ]
+            `서버로부터 받아온 할 일 ${new Date().toLocaleString()}`
         );
 
         yield put(fetchTodosSucceeded(data));
@@ -23,7 +20,9 @@ import { fetchTodosRequested,
  }
 
  function* fetchTodosSaga() {
-    yield takeEvery(fetchTodosRequested, fetchTodos);
+    //yield takeEvery(fetchTodosRequested, fetchTodos);
+    //yield takeLatest(fetchTodosRequested, fetchTodos);
+    yield takeLeading(fetchTodosRequested, fetchTodos);
  }
 
  export default fetchTodosSaga;

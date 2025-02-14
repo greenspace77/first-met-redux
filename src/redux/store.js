@@ -5,6 +5,39 @@ import { thunk } from "redux-thunk";
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 // import asyncFunctionMiddleware from './middlewares/asyncFunctionMiddleware';
+import { persistStore, persistReducer, createMigrate } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import sessionStorage from 'redux-persist/lib/storage/session';
+
+const migrations = {
+    1: (state) => {
+        return {
+            ...state,
+            fetchTodos: {
+                ...state.fetchTodos,
+                extraData: undefined,
+            }
+        };
+    },
+    2: (state) => {
+        return {
+            ...state,
+            fetchTodos: {
+                ...state.fetchTodos,
+                extraData: null,
+            }
+        };
+    },
+}
+
+const persistConfig = {
+    key: 'root',
+    storage: sessionStorage,
+    version: 2,
+    migrate: createMigrate(migrations, { debug: false }),
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -17,10 +50,12 @@ const sagaMiddleware = createSagaMiddleware();
 // })
 
 const store = createStore(
-    rootReducer,
+    persistedReducer,
     composeEnhancers(applyMiddleware(thunk, sagaMiddleware))
 );
 
 sagaMiddleware.run(rootSaga);
+
+export const persistor = persistStore(store);
 
 export default store;
