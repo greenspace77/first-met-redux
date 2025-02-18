@@ -12,7 +12,6 @@ import {
     FLUSH,
     REHYDRATE,
     PAUSE,
-    RERSIST,
     PURGE,
     REGISTER,
     PERSIST,
